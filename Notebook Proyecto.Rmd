@@ -32,3 +32,12 @@ victimas_2022 <- read.csv("datasets/vd22.csv")
 victimas_2023 <- read.csv("datasets/vd23.csv")
 
 ```
+## Datast consolidado
+
+Se creara un dataset uniendo todos los datasets
+```{r}
+
+victimas <- rbind(victimas_2016, victimas_2017, victimas_2018, victimas_2019, victimas_2020, victimas_2021, victimas_2022, victimas_2023)
+
+```
+
