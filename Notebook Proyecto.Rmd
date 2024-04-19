@@ -32,12 +32,303 @@ victimas_2022 <- read.csv("datasets/vd22.csv")
 victimas_2023 <- read.csv("datasets/vd23.csv")
 
 ```
-## Datast consolidado
+
+## Dataset consolidado
 
 Se creara un dataset uniendo todos los datasets
+
 ```{r}
 
 victimas <- rbind(victimas_2016, victimas_2017, victimas_2018, victimas_2019, victimas_2020, victimas_2021, victimas_2022, victimas_2023)
 
+victimas
+
 ```
 
+El dataset final, Tiene el tamaño de 248076 x 18 variables.
+
+# Reglas de Asociacion
+
+Para las reglas de asociacion tenemos dos opcions Apriori o FP-Growth. Las asociaciones seran aplicadas con FP-Growth, Y se basaran todas filtrando en base al grupo del delitoy el genero de al victima:
+
+## Primera asociacion
+
+Podemos partir en la separacion de delitos para un estudio mas filtrado entre los diferentes tipos de delitos que sufren los guatemaltecos.
+
+### Victimas de homicidios
+
+```{r}
+victimas_aso <- victimas %>%
+  filter(g_delitos == "Homicidios") %>%
+  select(-núm_corre,-g_delitos, -zona_ocu, -g_hora, -día_ocu)
+  
+r <- fim4r(victimas_aso, method="fpgrowth", target="rules", supp=.25, conf=.5)
+rframe <- as(r, "data.frame")
+rframe
+```
+
+De estos resultados podemos deducir varias cosas. Como que el homicidio por arma de fuego es el delito cometido a las victimas de homicidido en conjunto con que este delito se incremento del 2020 al 2023 en el departamento de Guatemala.
+
+Pero vemos que la tendencia por la cantidad de homicidios que sufren los hombres en Guatemala es mayor que las Mujeres. Por lo que vamos a separar el sexo de las personas para ver las tendencias de Homicidios en Hombre y Mujeres respectivamente.
+
+#### Hombres victimas de homicidios
+
+```{r}
+victimas_aso <- victimas %>%
+  filter(g_delitos == "Homicidios" & sexo_per == "Hombre") %>%
+  select(-núm_corre,-g_delitos, -zona_ocu, -g_hora, -día_ocu, -sexo_per)
+  
+r <- fim4r(victimas_aso, method="fpgrowth", target="rules", supp=.25, conf=.5)
+rframe <- as(r, "data.frame")
+rframe
+```
+
+Nos da informacion similar a ver el analisis sin filtrar el sexo de la victima. Y podemos asociar lo siguiente:
+
+-   Que los homicidios de los hombres por arma de fuego se dieron principalmente del 2020 al 2023.
+
+-   Que los homicidios de los hombres por arma de fuego se dieron por la noche.
+
+-   Que los homicidios de los hombres por arma de fuego se dieron en el departamento de Guatemala.
+
+#### Muejeres victimas de homicidios
+
+```{r}
+victimas_aso <- victimas %>%
+  filter(g_delitos == "Homicidios" & sexo_per == "Mujer") %>%
+  select(-núm_corre,-g_delitos, -zona_ocu, -g_hora, -día_ocu, -sexo_per)
+  
+r <- fim4r(victimas_aso, method="fpgrowth", target="rules", supp=.25, conf=.5)
+rframe <- as(r, "data.frame")
+rframe
+```
+
+Nos da informacion similar al analisis de los hombres victimas de homicidio. Y podemos asociar lo siguiente:
+
+-   Que los homicidios de las mujeres por arma de fuego se dieron principalmente del 2020 al 2023.
+
+-   Que los homicidios de las mujeres por arma de fuego se dieron por la noche.
+
+-   Que los homicidios de las mujeres por arma de fuego se dieron en el departamento de Guatemala.
+
+## Segunda Asociacion
+
+Seguiremos con el analisis separandolo por el grupo de delitos, ahora para otro tipo de de delito.
+
+### Victimas de Lesiones
+
+```{r}
+victimas_aso <- victimas %>%
+  filter(g_delitos == "Lesiones") %>%
+  select(-núm_corre,-g_delitos, -zona_ocu, -g_hora, -día_ocu)
+  
+r <- fim4r(victimas_aso, method="fpgrowth", target="rules", supp=.25, conf=.5)
+rframe <- as(r, "data.frame")
+rframe
+```
+
+Por estes analisis podemos determinar que el mayor delito por Lesion, Lesion por arma de fuego. Y que son los hombres en el departamento de Guatemala los que son mas victimas de este delito.
+
+Para ver si las mujeres mantinen esta tendencia haremos el filtrado para cada sexo.
+
+#### Hombres victimas de lesiones
+
+```{r}
+victimas_aso <- victimas %>%
+  filter(g_delitos == "Lesiones" & sexo_per == "Hombre") %>%
+  select(-núm_corre,-g_delitos, -zona_ocu, -g_hora, -día_ocu, -sexo_per)
+  
+r <- fim4r(victimas_aso, method="fpgrowth", target="rules", supp=.25, conf=.5)
+rframe <- as(r, "data.frame")
+rframe
+```
+
+Nos da informacion similar a ver el analisis sin filtrar el sexo de la victima. Y podemos asociar lo siguiente:
+
+-   Que las lesiones de los hombres por arma de fuego se dieron por la noche.
+
+-   Que las lesiones de los hombres por arma de fuego se dieron en el departamento de Guatemala.
+
+#### Mujeres victimas de lesiones
+
+```{r}
+victimas_aso <- victimas %>%
+  filter(g_delitos == "Lesiones" & sexo_per == "Mujer") %>%
+  select(-núm_corre,-g_delitos, -zona_ocu, -g_hora, -día_ocu, -sexo_per)
+  
+r <- fim4r(victimas_aso, method="fpgrowth", target="rules", supp=.25, conf=.5)
+rframe <- as(r, "data.frame")
+rframe
+```
+
+Nos da informacion similar a ver el analisis de los hombre. Y podemos asociar lo siguiente:
+
+-   Que las lesiones de las mujeres por arma de fuego se dieron por la noche.
+
+-   Que las lesiones de los mujeres por arma de fuego se dieron en el departamento de Guatemala.
+
+## Tercera Asociacion
+
+### Victimas contra el patrimonio
+
+```{r}
+victimas_aso <- victimas %>%
+  filter(g_delitos == "Contra el patrimonio") %>%
+  select(-núm_corre,-g_delitos, -zona_ocu, -g_hora, -día_ocu)
+  
+r <- fim4r(victimas_aso, method="fpgrowth", target="rules", supp=.2, conf=.5)
+rframe <- as(r, "data.frame")
+rframe
+```
+
+Por estes analisis podemos observar que no mayor asociacion evidente, Se procedera a el filtrado por sexo para determinar si entre hombre y mujeres hay una asociacion mas directa.
+
+#### Victimas hombres en contra el patrimonio
+
+```{r}
+victimas_aso <- victimas %>%
+  filter(g_delitos == "Contra el patrimonio" & sexo_per == "Hombre") %>%
+  select(-núm_corre,-g_delitos, -zona_ocu, -g_hora, -día_ocu, -sexo_per)
+  
+r <- fim4r(victimas_aso, method="fpgrowth", target="rules", supp=.2, conf=.5)
+rframe <- as(r, "data.frame")
+rframe
+```
+
+No nos da un delito particular pero si podemos asociar lo siguiente:
+
+-   Que los delitos en contra el patrimonio en los hombres se dieron por la mañana en el departamento de Guatemala.
+
+#### Victimas mujeres en contra el patrimonio
+
+```{r}
+victimas_aso <- victimas %>%
+  filter(g_delitos == "Contra el patrimonio" & sexo_per == "Mujer") %>%
+  select(-núm_corre,-g_delitos, -zona_ocu, -g_hora, -día_ocu, -sexo_per)
+  
+r <- fim4r(victimas_aso, method="fpgrowth", target="rules", supp=.2, conf=.5)
+rframe <- as(r, "data.frame")
+rframe
+```
+
+No nos da un delito particular pero si podemos asociar lo siguiente:
+
+-   Que los delitos en contra el patrimonio en las mujeres se dieron del 2020 al 2023.
+
+## Cuarta Asociacion
+
+### Victimas contra la libertad
+
+```{r}
+victimas_aso <- victimas %>%
+  filter(g_delitos == "Contra la libertad") %>%
+  select(-núm_corre,-g_delitos, -zona_ocu, -g_hora, -día_ocu, -g_edad_60ymás, -g_edad_80ymás)
+  
+r <- fim4r(victimas_aso, method="fpgrowth", target="rules", supp=.2, conf=.5)
+rframe <- as(r, "data.frame")
+rframe
+```
+
+Por estes analisis podemos determinar que el mayor delito encontra de la libertad, es la desaparicion. Y que son las mujeresen las que son mas victimas de este delito.
+
+Para ver si los hombres mantinen esta tendencia haremos el filtrado para cada sexo.
+
+#### Victimas hombres contra su libertad
+
+```{r}
+victimas_aso <- victimas %>%
+  filter(g_delitos == "Contra la libertad" & sexo_per == "Hombre") %>%
+  select(-núm_corre,-g_delitos, -zona_ocu, -g_hora, -día_ocu, -sexo_per, -g_edad_60ymás, -g_edad_80ymás)
+  
+r <- fim4r(victimas_aso, method="fpgrowth", target="rules", supp=.2, conf=.5)
+rframe <- as(r, "data.frame")
+rframe
+```
+
+Podemos asociar lo siguiente:
+
+-   Que se vulnero la libertad de los hombres por el delito desaparecidos entre los años 2016-2021
+
+-   Que se vulnero la libertad de los hombres por el delito desaparecidos por la mañana
+
+-   Que se vulnero la libertad de los hombres por el delito desaparecidos en el departamento de Guatemala.
+
+#### Victimas mujeres contra su linertad
+
+```{r}
+victimas_aso <- victimas %>%
+  filter(g_delitos == "Contra la libertad" & sexo_per == "Mujer") %>%
+  select(-núm_corre,-g_delitos, -zona_ocu, -g_hora, -día_ocu, -sexo_per, -g_edad_60ymás, -g_edad_80ymás)
+  
+r <- fim4r(victimas_aso, method="fpgrowth", target="rules", supp=.2, conf=.5)
+rframe <- as(r, "data.frame")
+rframe
+```
+
+Podemos asociar:
+
+-   Que se vulnero la libertad de las mujeres por el delito desaparecidos entre los años 2016-2021
+
+-   Que se vulnero la libertad de las mujeres por el delito desaparecidos con edad entre 15 y 19 años
+
+-   Que se vulnero la libertad de las mujeres por el delito desaparecidos por la mañana
+
+## Quinta Asociacion
+
+### Victimas de extorsion
+
+```{r}
+victimas_aso <- victimas %>%
+  filter(g_delitos == "Extorsión") %>%
+  select(-núm_corre,-g_delitos, -zona_ocu, -g_hora, -día_ocu, -g_edad_60ymás, -g_edad_80ymás)
+  
+r <- fim4r(victimas_aso, method="fpgrowth", target="rules", supp=.2, conf=.5)
+rframe <- as(r, "data.frame")
+rframe
+```
+
+Por estes analisis podemos determinar que el mayor delito de extrosion, es la extorsion a residencias. Y que son los hombres mnas victimas de este delito
+
+Para ver si las mujeres mantinen esta tendencia haremos el filtrado para cada sexo.
+
+#### Victimas hombres de extorsion
+
+```{r}
+victimas_aso <- victimas %>%
+  filter(g_delitos == "Extorsión" & sexo_per == "Hombre") %>%
+  select(-núm_corre,-g_delitos, -zona_ocu, -g_hora, -día_ocu, -sexo_per, -g_edad_60ymás, -g_edad_80ymás)
+  
+r <- fim4r(victimas_aso, method="fpgrowth", target="rules", supp=.2, conf=.5)
+rframe <- as(r, "data.frame")
+rframe
+```
+
+Podemos asociar lo siguiente:
+
+-   Que los hombres son victimas de extorsion por el delito de extorsion a residencias
+
+-   Que los hombres son victimas de extorsion por el delito de extorsion a residencias por la tarde
+
+-   Que los hombres son victimas de extorsion por el delito de extorsion a residencias en los años 2021-2022
+
+-   Que los hombres son victimas de extorsion por el delito de extorsion a comercion principalmente en el departamento de Guatemala
+
+#### Victimas mujeres de extorsion
+
+```{r}
+victimas_aso <- victimas %>%
+  filter(g_delitos == "Extorsión" & sexo_per == "Mujer") %>%
+  select(-núm_corre,-g_delitos, -zona_ocu, -g_hora, -día_ocu, -sexo_per, -g_edad_60ymás, -g_edad_80ymás)
+  
+r <- fim4r(victimas_aso, method="fpgrowth", target="rules", supp=.2, conf=.5)
+rframe <- as(r, "data.frame")
+rframe
+```
+
+Podemos asociar lo siguiente:
+
+-   Que los hombres son victimas de extorsion por el delito de extorsion a residencias
+
+-   Que los hombres son victimas de extorsion por el delito de extorsion a residencias por la tarde
+
+-   Que los hombres son victimas de extorsion por el delito de extorsion a residencias en los años 2021-2022
