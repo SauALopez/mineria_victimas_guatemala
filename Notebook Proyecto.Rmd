@@ -3,6 +3,13 @@ title: "Proyecto Introduccion a la Mineria de Datos"
 output: html_notebook
 ---
 
+```{r}
+library(ggplot2)
+library(arules)
+library(arules)
+library(dplyr)
+```
+
 # Lectura de Datasets
 
 Los datasets se encuentran en la carpeta datasets, estos se enceuntran en diferetnes formatos:
@@ -332,3 +339,76 @@ Podemos asociar lo siguiente:
 -   Que los hombres son victimas de extorsion por el delito de extorsion a residencias por la tarde
 
 -   Que los hombres son victimas de extorsion por el delito de extorsion a residencias en los años 2021-2022
+
+# Análisis de clúster
+
+```{r}
+victimas_2016 <- read.csv("datasets/v16.csv")
+victimas_2017 <- read.csv("datasets/v17.csv")
+victimas_2018 <- read.csv("datasets/v18.csv")
+victimas_2019 <- read.csv("datasets/v19.csv")
+victimas_2020 <- read.csv("datasets/v20.csv")
+victimas_2021 <- read.csv("datasets/v21.csv")
+
+victimas <- rbind(victimas_2016, victimas_2017, victimas_2018, victimas_2019, victimas_2020, victimas_2021)
+
+victimas
+```
+
+### Cluster - Delito vs Edad de victima
+
+```{r}
+victimas_cluster <- victimas %>%
+  filter(edad_per < 100)
+  
+
+result_kmeans  <- kmeans (victimas_cluster, centers = 2)
+
+ggplot(victimas_cluster, aes(x = edad_per , y = g_delitos , color = as.factor(result_kmeans$cluster))) +
+  geom_point() + 
+  geom_point(data = as.data.frame(result_kmeans$centers), aes(x = edad_per, y = g_delitos), color = "black", size = 4, shape = 17) +
+  labs(title = "Edad victima vs Grupo delito") +
+  theme_minimal()
+```
+
+En este cluster podemos ver dos grupos. Y claramente se ve la tendencia que el grupo de Victimas #1 sufre mas delitos de categoria 4, que la fuente de datos no la tiene etiquetada. Pero son delitos, relacionados con Violaciones y son los unicos reportados y son del 2016.
+
+### Cluster - Homicidios
+
+```{r}
+victimas_cluster <- victimas%>%
+  filter(edad_per <100)%>%
+  filter(g_delitos == 1)%>% #Homicidios
+  select(-núm_corre, -zona_ocu, -g_hora, -g_edad_60ymás, -g_edad_80ymás)
+  
+  
+
+result_kmeans  <- kmeans (victimas_cluster, centers = 3)
+
+ggplot(victimas_cluster, aes(x = edad_per , y = mes_ocu , color = as.factor(result_kmeans$cluster))) +
+  geom_point() + 
+  geom_point(data = as.data.frame(result_kmeans$centers), aes(x = edad_per, y = mes_ocu), color = "black", size = 4, shape = 17) +
+  labs(title = "Homicidios, Edad vs Mes Ocurrencia") +
+  theme_minimal()
+```
+
+### Cluster - Lesiones
+
+```{r}
+victimas_cluster <- victimas%>%
+  filter(edad_per <100)%>%
+  filter(g_delitos == 2)%>% #Lesiones
+  select(-núm_corre, -zona_ocu, -g_hora, -g_edad_60ymás, -g_edad_80ymás)
+  
+  
+
+result_kmeans  <- kmeans (victimas_cluster, centers = 3)
+
+ggplot(victimas_cluster, aes(x = edad_per , y = mes_ocu , color = as.factor(result_kmeans$cluster))) +
+  geom_point() + 
+  geom_point(data = as.data.frame(result_kmeans$centers), aes(x = edad_per, y = mes_ocu), color = "black", size = 4, shape = 17) +
+  labs(title = "Lesiones, Edad vs Mes Ocurrencia") +
+  theme_minimal()
+```
+
+Podemos ver estos Tres, Clusters. Con Grupos variados. Y aun filtrando el tipo de delito que sufrio la victima no hay grupos marcados. Los guatemaltecos y guatemaltecas sufren delitos variados.
