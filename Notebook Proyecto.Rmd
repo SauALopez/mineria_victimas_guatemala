@@ -1,18 +1,34 @@
 ---
-title: "R Notebook"
+title: "Proyecto Introduccion a la Mineria de Datos"
 output: html_notebook
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.
+# Lectura de Datasets
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*.
+Los datasets se encuentran en la carpeta datasets, estos se enceuntran en diferetnes formatos:
+
+1.  CSV, con datos normalizados
+2.  CSV, con datos con diccionario integrado
+3.  Excel, con datos normalizados
+4.  Excel, con datos con diccionario integrado
+5.  Archivo SAV, de la herramienta de IBM SPSS. Con el cual se exportaron cada una de las otras fuentes de datos.
+
+-   Los años 2022 y 2023, unicamente cuentan con fuente de datos con diccionario integrado.
+
+-   El año 2022, le hace falta el la columna hora_ocu, que identifica la hora del delito.
+
+## Lectura de CSV
+
+Se usaran los datos de los archivos CSV, con el diccionario integrado.Para poder integrar los datasets de los años 2022 y 2023.
 
 ```{r}
-plot(cars)
+victimas_2016 <- read.csv("datasets/vd16.csv")
+victimas_2017 <- read.csv("datasets/vd17.csv")
+victimas_2018 <- read.csv("datasets/vd18.csv")
+victimas_2019 <- read.csv("datasets/vd19.csv")
+victimas_2020 <- read.csv("datasets/vd20.csv")
+victimas_2021 <- read.csv("datasets/vd21.csv")
+victimas_2022 <- read.csv("datasets/vd22.csv")
+victimas_2023 <- read.csv("datasets/vd23.csv")
+
 ```
-
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
-
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
-
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
