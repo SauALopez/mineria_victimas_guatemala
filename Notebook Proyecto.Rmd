@@ -3,6 +3,10 @@ title: "Proyecto Introduccion a la Mineria de Datos"
 output: html_notebook
 ---
 
+### Librerias
+
+Para la manipulacion y aplicar los diferentes algortimos de mineria de datos se usaron las siguientes librerias.
+
 ```{r}
 library(ggplot2)
 library(arules)
@@ -392,7 +396,7 @@ ggplot(victimas_cluster, aes(x = edad_per , y = mes_ocu , color = as.factor(resu
   theme_minimal()
 ```
 
-### Cluster - Lesiones
+### Cluster - Lesiones, Edad vs Mes Ocurrencia
 
 ```{r}
 victimas_cluster <- victimas%>%
@@ -411,4 +415,4 @@ ggplot(victimas_cluster, aes(x = edad_per , y = mes_ocu , color = as.factor(resu
   theme_minimal()
 ```
 
-Podemos ver estos Tres, Clusters. Con Grupos variados. Y aun filtrando el tipo de delito que sufrio la victima no hay grupos marcados. Los guatemaltecos y guatemaltecas sufren delitos variados.
+Podemos ver estos dos clusters. Con Grupos variados. Y aun filtrando el tipo de delito que sufrio la victima no hay grupos marcados. Los guatemaltecos y guatemaltecas sufren delitos variados.
