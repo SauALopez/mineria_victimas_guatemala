@@ -16,4 +16,4 @@ install.(dplyr)
 Este algoritmo de asoaciacion se debe de hacer instalando FP-Growth desde su binario por lo que es necesrio:
 
 1. Descargar e instalar R Tool para su vesion de R -> [RTools](https://cran.r-project.org/bin/windows/Rtools/)
-2. Descargar e installar fim4r_1.8 -> [Fim4r](https://borgelt.net/fim4r.html)
+2. Descargar e instalar fim4r_1.8 -> [Fim4r](https://borgelt.net/fim4r.html)
