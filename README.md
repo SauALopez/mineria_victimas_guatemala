@@ -3,7 +3,7 @@
 Desarollo del proyecto para el curso de Introduccion a la Mineria de Datos de la Maestria en Ingeniería con Especialidad en Ciencias de la Computación
 
 ## Proyecto en R
-El proyecto fue ejecutado en Rstudio, con R 4.3.3
+El proyecto fue ejecutado en RStudio, con R version -> 4.3.3
 
 ### Librerias
 Para el ejecutar correctamente el script de R, son necesarias las siguientes librerias.
@@ -17,3 +17,7 @@ Este algoritmo de asoaciacion se debe de hacer instalando FP-Growth desde su bin
 
 1. Descargar e instalar R Tool para su vesion de R -> [RTools](https://cran.r-project.org/bin/windows/Rtools/)
 2. Descargar e instalar fim4r_1.8 -> [Fim4r](https://borgelt.net/fim4r.html)
+
+## Ejecucion del Notebook 
+
+Para ejecutar correctamente el proyecto. Con RStudio abrir el directorio del repositorio y luego ejecutar todas las celdas para ver los resultados de las mismas.
