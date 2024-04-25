@@ -416,3 +416,74 @@ ggplot(victimas_cluster, aes(x = edad_per , y = mes_ocu , color = as.factor(resu
 ```
 
 Podemos ver estos dos clusters. Con Grupos variados. Y aun filtrando el tipo de delito que sufrio la victima no hay grupos marcados. Los guatemaltecos y guatemaltecas sufren delitos variados.
+
+# Clasificacion (Arboles de decision)
+
+Para esto necesitamos las siguientes librerias
+
+-   rpart
+
+-   rpart.plot
+
+```{r}
+library(rpart)
+library(rpart.plot)
+```
+
+## Clasificacion de victimas contra su libertad
+
+Se usan las sigueinte variables para generar un arbol de clasificacion para los delitos cometidos contra la libertad:
+
+-   Hora
+
+-   Sexo
+
+-   Edad
+
+-   Departamento
+
+```{r}
+victimas_arbol <- victimas %>%
+  filter(g_delitos == 5)
+
+arbol <- rpart(delito_com ~ g_hora_mañ.tar.noch+sexo_per+edad_per+depto_ocu, data=victimas_arbol, method = "class")
+
+
+rpart.plot(arbol,
+           type = 2,
+           extra = 0,  
+           under = TRUE,  
+           fallen.leaves = TRUE,  
+           box.palette = "BuGn",  
+           main = "Victimas contra su libertad",
+           cex = 0.45)
+```
+
+## Arbol para victimas contra su patriomonio
+
+Se usan las sigueinte variables para generar un arbol de clasificacion para los delitos cometidos contra la libertad:
+
+-   Hora
+
+-   Sexo
+
+-   Edad
+
+-   Departamento
+
+```{r}
+victimas_arbol <- victimas %>%
+  filter(g_delitos == 3)
+
+arbol <- rpart(delito_com ~ g_hora_mañ.tar.noch+sexo_per+edad_per+depto_ocu, data=victimas_arbol, method = "class")
+
+
+rpart.plot(arbol,
+           type = 2,
+           extra = 0,  
+           under = TRUE,  
+           fallen.leaves = TRUE,  
+           box.palette = "BuGn",  
+           main = "Victimas contra su libertad",
+           cex = 0.45)
+```
